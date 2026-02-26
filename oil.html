@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مواعيد حصة البنزين - كركوك</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    text-align:center;
+    direction: rtl;
+    padding:20px;
+}
+h1{
+    color:#1e3a8a;
+}
+.card{
+    background:white;
+    padding:20px;
+    margin:15px auto;
+    max-width:350px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+.previous{border-right:6px solid #9ca3af;}
+.current{border-right:6px solid #16a34a;}
+.next{border-right:6px solid #2563eb;}
+.date{
+    font-size:18px;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>مواعيد حصة البنزين</h1>
+<p>محافظة كركوك</p>
+
+<div id="previous" class="card previous"></div>
+<div id="current" class="card current"></div>
+<div id="next" class="card next"></div>
+
+<script>
+
+const startDate = new Date(2026, 0, 5); // 5-1-2026
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const diffTime = today - startDate;
+const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+let cycleNumber = Math.floor(diffDays / 5);
+
+if (diffDays < 0) {
+    cycleNumber = 0;
+}
+
+function getCycleDates(cycle){
+    const start = new Date(startDate);
+    start.setDate(startDate.getDate() + (cycle * 5));
+    
+    const end = new Date(start);
+    end.setDate(start.getDate() + 4);
+    
+    return {start, end};
+}
+
+function formatDate(date){
+    return date.toLocaleDateString('ar-IQ');
+}
+
+const previousCycle = getCycleDates(cycleNumber - 1);
+const currentCycle = getCycleDates(cycleNumber);
+const nextCycle = getCycleDates(cycleNumber + 1);
+
+document.getElementById("previous").innerHTML = `
+<h3>الحصة السابقة</h3>
+<div class="date">${formatDate(previousCycle.start)} 
+إلى ${formatDate(previousCycle.end)}</div>
+`;
+
+document.getElementById("current").innerHTML = `
+<h3>الحصة الحالية</h3>
+<div class="date">${formatDate(currentCycle.start)} 
+إلى ${formatDate(currentCycle.end)}</div>
+`;
+
+document.getElementById("next").innerHTML = `
+<h3>الحصة القادمة</h3>
+<div class="date">${formatDate(nextCycle.start)} 
+إلى ${formatDate(nextCycle.end)}</div>
+`;
+
+</script>
+
+</body>
+</html>

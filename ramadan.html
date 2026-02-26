@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>إمساكية رمضان - كركوك</title>
+
+<style>
+body{
+font-family:Tahoma;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:15px;
+max-width:420px;
+margin:auto;
+box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+h1{color:#22c55e}
+
+.time{
+font-size:20px;
+margin:6px;
+}
+
+button{
+margin:10px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+background:#22c55e;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>إمساكية رمضان<br>كركوك</h1>
+
+<h2 id="date"></h2>
+<h3 id="miladi"></h3>
+
+<div class="time">الفجر: <span id="fajr"></span></div>
+<div class="time">الشروق: <span id="sunrise"></span></div>
+<div class="time">الظهر: <span id="dhuhr"></span></div>
+<div class="time">العصر: <span id="asr"></span></div>
+<div class="time">المغرب: <span id="maghrib"></span></div>
+<div class="time">العشاء: <span id="isha"></span></div>
+
+<br>
+
+<button onclick="prevDay()">⬅ أمس</button>
+<button onclick="nextDay()">غداً ➡</button>
+
+</div>
+
+<script>
+
+const daysName=[
+"الأحد","الأثنين","الثلاثاء",
+"الأربعاء","الخميس","الجمعة","السبت"
+];
+
+const months=[
+"كانون الثاني","شباط","آذار","نيسان","أيار","حزيران",
+"تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"
+];
+
+const ramadan=[
+{d:18,m:2,day:"1 رمضان",fajr:"5:21",sunrise:"6:42",dhuhr:"12:21",asr:"3:25",maghrib:"5:53",isha:"7:08"},
+{d:19,m:2,day:"2 رمضان",fajr:"5:19",sunrise:"6:41",dhuhr:"12:21",asr:"3:26",maghrib:"5:54",isha:"7:09"},
+{d:20,m:2,day:"3 رمضان",fajr:"5:18",sunrise:"6:40",dhuhr:"12:21",asr:"3:27",maghrib:"5:55",isha:"7:10"},
+{d:21,m:2,day:"4 رمضان",fajr:"5:17",sunrise:"6:39",dhuhr:"12:21",asr:"3:27",maghrib:"5:56",isha:"7:10"},
+{d:22,m:2,day:"5 رمضان",fajr:"5:16",sunrise:"6:38",dhuhr:"12:21",asr:"3:28",maghrib:"5:57",isha:"7:11"},
+{d:23,m:2,day:"6 رمضان",fajr:"5:15",sunrise:"6:36",dhuhr:"12:21",asr:"3:29",maghrib:"5:58",isha:"7:12"},
+{d:24,m:2,day:"7 رمضان",fajr:"5:14",sunrise:"6:35",dhuhr:"12:21",asr:"3:29",maghrib:"5:59",isha:"7:13"},
+{d:25,m:2,day:"8 رمضان",fajr:"5:13",sunrise:"6:34",dhuhr:"12:20",asr:"3:30",maghrib:"5:59",isha:"7:14"},
+{d:26,m:2,day:"9 رمضان",fajr:"5:11",sunrise:"6:33",dhuhr:"12:20",asr:"3:30",maghrib:"6:00",isha:"7:15"},
+{d:27,m:2,day:"10 رمضان",fajr:"5:10",sunrise:"6:31",dhuhr:"12:20",asr:"3:31",maghrib:"6:01",isha:"7:16"},
+{d:28,m:2,day:"11 رمضان",fajr:"5:09",sunrise:"6:30",dhuhr:"12:20",asr:"3:32",maghrib:"6:02",isha:"7:17"},
+{d:1,m:3,day:"12 رمضان",fajr:"5:08",sunrise:"6:29",dhuhr:"12:20",asr:"3:32",maghrib:"6:03",isha:"7:17"},
+{d:2,m:3,day:"13 رمضان",fajr:"5:06",sunrise:"6:28",dhuhr:"12:20",asr:"3:33",maghrib:"6:04",isha:"7:18"},
+{d:3,m:3,day:"14 رمضان",fajr:"5:05",sunrise:"6:26",dhuhr:"12:19",asr:"3:33",maghrib:"6:05",isha:"7:19"},
+{d:4,m:3,day:"15 رمضان",fajr:"5:04",sunrise:"6:25",dhuhr:"12:19",asr:"3:34",maghrib:"6:06",isha:"7:20"},
+{d:5,m:3,day:"16 رمضان",fajr:"5:03",sunrise:"6:24",dhuhr:"12:19",asr:"3:34",maghrib:"6:07",isha:"7:21"},
+{d:6,m:3,day:"17 رمضان",fajr:"5:01",sunrise:"6:22",dhuhr:"12:19",asr:"3:35",maghrib:"6:08",isha:"7:22"},
+{d:7,m:3,day:"18 رمضان",fajr:"5:00",sunrise:"6:21",dhuhr:"12:18",asr:"3:35",maghrib:"6:08",isha:"7:23"},
+{d:8,m:3,day:"19 رمضان",fajr:"4:59",sunrise:"6:20",dhuhr:"12:18",asr:"3:36",maghrib:"6:09",isha:"7:24"},
+{d:9,m:3,day:"20 رمضان",fajr:"4:57",sunrise:"6:18",dhuhr:"12:18",asr:"3:36",maghrib:"6:10",isha:"7:24"},
+{d:10,m:3,day:"21 رمضان",fajr:"4:56",sunrise:"6:17",dhuhr:"12:18",asr:"3:36",maghrib:"6:11",isha:"7:25"},
+{d:11,m:3,day:"22 رمضان",fajr:"4:54",sunrise:"6:15",dhuhr:"12:17",asr:"3:37",maghrib:"6:12",isha:"7:26"},
+{d:12,m:3,day:"23 رمضان",fajr:"4:53",sunrise:"6:14",dhuhr:"12:17",asr:"3:37",maghrib:"6:13",isha:"7:27"},
+{d:13,m:3,day:"24 رمضان",fajr:"4:52",sunrise:"6:13",dhuhr:"12:17",asr:"3:38",maghrib:"6:14",isha:"7:28"},
+{d:14,m:3,day:"25 رمضان",fajr:"4:50",sunrise:"6:11",dhuhr:"12:17",asr:"3:38",maghrib:"6:14",isha:"7:29"},
+{d:15,m:3,day:"26 رمضان",fajr:"4:49",sunrise:"6:10",dhuhr:"12:16",asr:"3:38",maghrib:"6:15",isha:"7:30"},
+{d:16,m:3,day:"27 رمضان",fajr:"4:47",sunrise:"6:08",dhuhr:"12:16",asr:"3:39",maghrib:"6:16",isha:"7:31"},
+{d:17,m:3,day:"28 رمضان",fajr:"4:46",sunrise:"6:07",dhuhr:"12:16",asr:"3:39",maghrib:"6:17",isha:"7:32"},
+{d:18,m:3,day:"29 رمضان",fajr:"4:44",sunrise:"6:06",dhuhr:"12:15",asr:"3:40",maghrib:"6:18",isha:"7:32"},
+{d:19,m:3,day:"30 رمضان",fajr:"4:43",sunrise:"6:04",dhuhr:"12:15",asr:"3:40",maghrib:"6:19",isha:"7:33"}
+];
+
+let index=0;
+
+function showDay(i){
+let r=ramadan[i];
+
+date.innerHTML=r.day;
+
+let fullDate=new Date(2026,r.m-1,r.d);
+
+miladi.innerHTML=
+daysName[fullDate.getDay()]+" - "+
+r.d+" "+
+months[r.m-1]+" 2026";
+
+fajr.textContent=r.fajr;
+sunrise.textContent=r.sunrise;
+dhuhr.textContent=r.dhuhr;
+asr.textContent=r.asr;
+maghrib.textContent=r.maghrib;
+isha.textContent=r.isha;
+}
+
+function findToday(){
+let today=new Date();
+index=ramadan.findIndex(x=>
+x.d===today.getDate() &&
+x.m===today.getMonth()+1
+);
+
+if(index!==-1) showDay(index);
+else date.innerHTML="اليوم خارج رمضان";
+}
+
+function nextDay(){ if(index<ramadan.length-1){index++;showDay(index);} }
+function prevDay(){ if(index>0){index--;showDay(index);} }
+
+findToday();
+
+</script>
+
+</body>
+</html>
